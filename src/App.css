@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+:root {
+    --primary : #731F34 ;
+    --primaryHover : #6b0922 ;
+    --secondary : #FDA955;
+    --grayText : #858585;
+    --dark : #505050;
+    --pure : #fff;
+}
+
+
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+
+#select-box-input{
+    padding : 6px 0 !important;
+    outline : none !important; 
+}
+
+.css-t3ipsp-control{
+    border : none !important;
+}
+
+@media print {
+    .report {
+        padding : 2rem;
+    }
+    .report table {
+        border : 1px solid var(--dark);
+    }
+    .report table td , .report table th {
+        border : 1px solid gray;
+    }
+}
