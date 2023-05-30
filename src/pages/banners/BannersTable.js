@@ -1,16 +1,29 @@
 import Pagination from 'components/global/pagination';
+import moment from 'moment';
 import React, { useRef, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { ClipLoader } from 'react-spinners';
+import { deleteBanner } from 'redux/actions/bannerActions';
+import { setCurrentPage } from 'redux/reducers/bannerReducer';
 import useClickOutside from 'utils/clickOutside';
 
-const BannersTable = () => {
+const BannersTable = ({ banners }) => {
     const dropMenuRef = useRef(null);
+    const dispatch = useDispatch();
     const [showDropMenu , setShowDropMenu] = useState(false);
     const [selectedMenuIndex , setSelectedMenuIndex]  = useState(0);
- 
+    
+    const { currentPage , pages , deleteLoading } = useSelector(state => state.banner);
 
     useClickOutside(dropMenuRef , () => setShowDropMenu(false));
 
+    const deleteHandler = async id => {
+        if(window.confirm('are your sure? You want to delete this banner?')){
+            await dispatch(deleteBanner(id));
+            setShowDropMenu(false);
+        }
+    }
 
     return (
         <div className=" shadow-bg overflow-x-auto rounded-lg">
@@ -39,25 +52,25 @@ const BannersTable = () => {
                 </thead>
                 <tbody className='text-sm'>
                    {
-                        [...Array(6).keys()]?.map((item , i) => (
+                        banners?.map((item , i) => (
                             <tr
-                            key={item.id} 
+                            key={item._id} 
                             className="bg-white border-b transition duration-300 ease-in-out"
                             >
                             <td className=" text-gray-900  px-6 py-4 whitespace-nowrap">
-                                Fresh and healthy fruits
+                                {item?.name}
                             </td>
                             <td className=" text-gray-900  px-6 py-4 whitespace-nowrap">
-                                Exciting Offers Flat 50% off on Fruits
+                                {item?.description}
                             </td>
                             <td className=" text-gray-900  px-6 py-4 whitespace-nowrap">
-                                Fruits
+                                {item?.offer}
                             </td>
                             <td className=" text-gray-900  px-6 py-4 whitespace-nowrap">
-                                Sep 18, 2023
+                                {moment(item?.startDate).format('DD MMM YYYY')}
                             </td>
                             <td className=" text-gray-900  px-6 py-4 whitespace-nowrap">
-                                Sep 28, 2023
+                                {moment(item?.endDate).format('DD MMM YYYY')}
                             </td>
                             <td className=" text-gray-900  px-6 py-4 whitespace-nowrap ">
                                 <div className='flex items-end justify-center relative' 
@@ -79,13 +92,24 @@ const BannersTable = () => {
                                         ref={dropMenuRef}
                                         >
                                             <Link 
-                                            to={`/banners/edit-banner/340`} 
+                                            to={`/banners/edit-banner/${item?._id}`} 
                                             className='py-3 font-medium hover:bg-gray-100 px-4 cursor-pointer flex items-center gap-1'>
                                                 <span>Edit</span>
                                             </Link>
-                                            <div className='py-3 font-medium hover:bg-gray-100 px-4 cursor-pointer flex items-center gap-1'>
-                                                <span>Delete</span>
-                                            </div>
+                                            <button className='py-3 font-medium hover:bg-gray-100 px-4 cursor-pointer flex items-center gap-1'
+                                            onClick={() => deleteHandler(item?._id)}
+                                            disabled={deleteLoading}
+                                            >
+                                                <span>
+                                                    {
+                                                        deleteLoading 
+                                                        ? 
+                                                            <ClipLoader size={15} />
+                                                        : 
+                                                        'Delete'
+                                                    }
+                                                </span>
+                                            </button>
                                         </div>
                                     }
                                 </div>
@@ -98,9 +122,9 @@ const BannersTable = () => {
             </table>
             {
                 <Pagination 
-                currentPage={1}
-                pageCount={5}
-                setPage={1}
+                currentPage={currentPage}
+                pageCount={pages}
+                setPage={setCurrentPage}
                 />
             }
         </div>

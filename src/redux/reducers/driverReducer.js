@@ -1,10 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const bannerSlice = createSlice({
-    name : 'banner' ,
+const driverSlice = createSlice({
+    name : 'driver' ,
     initialState : {
-        banners : [] ,
-        bannerDetails : null ,
+        drivers : [] ,
+        driverDetails : null ,
         loading : false , 
         createLoading : false , 
         updateLoading : false , 
@@ -15,21 +15,21 @@ const bannerSlice = createSlice({
     } , 
     reducers : {
         setDocs (state , action) {
-            state.banners = action.payload
+            state.drivers = action.payload
         } ,
         setDocDetails (state , action) {
-            state.bannerDetails = action.payload
+            state.driverDetails = action.payload
         } ,
         addDoc (state , action) {
-            state.banners = state.banners.unshift(action.payload);
+            state.drivers = state.drivers.unshift(action.payload);
         } ,
         updateDoc (state , action) {
-            const index = state.banners.findIndex(i => i._id === action.payload._id);
-            state.banners[index] = action.payload;
-            state.bannerDetails = action.payload;
+            const index = state.drivers.findIndex(i => i._id === action.payload._id);
+            state.drivers[index] = action.payload;
+            state.driverDetails = action.payload;
         } ,
         removeDoc (state , action) {
-            state.banners = state.banners.filter(i => i._id !== action.payload);
+            state.drivers = state.drivers.filter(i => i._id !== action.payload);
         } , 
         setLoading (state , action) {
             state.loading = action.payload;
@@ -57,6 +57,6 @@ const bannerSlice = createSlice({
 
 export const { 
     setDocs , setDocDetails , setLoading , setCreateLoading , setUpdateLoading , setDeleteLoading , setCurrentPage , setPages , updateDoc , removeDoc , setDocsCount , addDoc 
-} = bannerSlice.actions;
+} = driverSlice.actions;
 
-export default bannerSlice.reducer;
+export default driverSlice.reducer;

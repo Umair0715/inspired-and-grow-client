@@ -8,7 +8,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { ClipLoader } from 'react-spinners'
-import { getCategories } from 'redux/actions/categoryActions'
+import { getCategories, getTotalCategories } from 'redux/actions/categoryActions'
 import { createSubCategory } from 'redux/actions/subCategoryActions'
 
 const AddSubCategory = () => {
@@ -21,7 +21,7 @@ const AddSubCategory = () => {
     const { createLoading } = useSelector(state => state.subCategory )
 
     useEffect(() => {
-        dispatch(getCategories())
+        dispatch(getTotalCategories())
     }, [])
 
     const handleSubmit = (e) => {

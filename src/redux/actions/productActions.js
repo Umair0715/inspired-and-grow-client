@@ -66,6 +66,19 @@ export const getProducts = (search) => async (dispatch , getState) => {
     }
 }
 
+export const getTotalProducts = () => async (dispatch) => {
+    try {
+        dispatch(setLoading(true));
+        const { data : { data : { docs } } } = await Axios(`${endPoint}/total`);
+        dispatch(setProducts(docs));
+        dispatch(setLoading(false));
+    } catch (err) {
+        dispatch(setLoading(false));
+        console.log('Get Total Products error:' , err);
+        toastError(err)
+    }
+}
+
 export const getProductsForBanner = () => async (dispatch , getState) => {
     try {
         dispatch(setLoading(true));

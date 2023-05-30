@@ -1,56 +1,34 @@
 import Pagination from 'components/global/pagination';
 import React, { useRef, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { ClipLoader } from 'react-spinners';
+import { deleteDriver } from 'redux/actions/driverActions';
+import { setCurrentPage } from 'redux/reducers/driverReducer';
 import useClickOutside from 'utils/clickOutside';
-import usersData from 'data/users'
 
-const DriversTable = () => {
+
+const DriversTable = ({ drivers }) => {
     const dropMenuRef = useRef(null);
+    const dispatch = useDispatch();
     const [showDropMenu , setShowDropMenu] = useState(false);
     const [selectedMenuIndex , setSelectedMenuIndex]  = useState(0);
-    const [selectAll , setSelectAll] = useState(false);
-    const [users, setUsers] = useState(usersData.map(item => (
-        {...item , isSelected : false }
-    )));
-
     useClickOutside(dropMenuRef , () => setShowDropMenu(false));
 
-    const handleSelectAll = (e) => {
-        setSelectAll(!selectAll)
-        const updatedUsers = users.map(user => {
-            return { ...user, isSelected: !selectAll };
-        });
-        setUsers(updatedUsers);
-    }
+    const { deleteLoading , currentPage , pages } = useSelector(state => state.driver);
 
-    const handleSelectUser = (id) => {
-        const updatedUsers = users.map(user => {
-            if (user.id === id) {
-                return {...user, isSelected: !user.isSelected };
-            }
-            return user;
-        });
-        setUsers(updatedUsers);
-    };
+    const deleteHandler = async (itemId) => {
+        if(window.confirm('Are you sure? You want to delete this driver?')){
+            await dispatch(deleteDriver(itemId));
+            setShowDropMenu(false);
+        }
+    }
 
     return (
         <div className=" shadow-bg overflow-x-auto rounded-lg">
             <table className="w-full table-auto overflow-x-auto ">
                 <thead className="bg-lightSlate border-b text-sm">
                     <tr className='bg-secondary text-white'>
-                        <th scope="col" className=" font-medium px-6 py-4 text-left">
-                            <div className='flex items-center gap-2'>
-                                <input 
-                                type="checkbox" 
-                                id='select-all' 
-                                onChange={handleSelectAll}
-                                checked={selectAll}
-                                />
-                                <label htmlFor="select-all" >
-                                    Select All
-                                </label>
-                            </div>
-                        </th>
                         <th scope="col" className=" font-medium px-6 py-4 text-left">
                             Diver Name
                         </th>
@@ -67,39 +45,24 @@ const DriversTable = () => {
                 </thead>
                 <tbody className='text-sm'>
                    {
-                        users.slice(1)?.map((item , i) => (
+                        drivers?.map((item , i) => (
                             <tr
-                            key={item.id} 
+                            key={item._id} 
                             className="bg-white border-b transition duration-300 ease-in-out"
                             >
-                            <td className=" text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                <div className='flex items-center gap-2'>
-                                    <input 
-                                    id={item.id}
-                                    type="checkbox" 
-                                    checked={item?.isSelected}
-                                    onChange={() => handleSelectUser(item.id)}
-                                    />
-                                    <label htmlFor={item.id}>
-                                        <i 
-                                        className="uil uil-mobile-android-alt text-base"
-                                        ></i>
-                                    </label>
-                                </div>                                
-                            </td>
                             <td className=" text-gray-900  px-6 py-4 whitespace-nowrap">
                                 <Link 
-                                to={`/driver-management/drivers/${item.id}`}
+                                to={`/driver-management/drivers/${item._id}`}
                                 className='text-primary underline'
                                 >
-                                    John Doe
+                                    {item?.firstName + " " + item?.lastName}
                                 </Link>
                             </td>
                             <td className=" text-gray-900  px-6 py-4 whitespace-nowrap">
-                                john@gmail.com
+                                {item?.email}
                             </td>
                             <td className=" text-gray-900  px-6 py-4 whitespace-nowrap">
-                                +9134535436365
+                                {item?.phone}
                             </td>
                             <td className=" text-gray-900  px-6 py-4 whitespace-nowrap ">
                                 <div className='flex items-end justify-center relative' 
@@ -121,16 +84,24 @@ const DriversTable = () => {
                                         ref={dropMenuRef}
                                         >
                                             <Link 
-                                            to={`/driver-management/edit-driver/${item.id}`} 
+                                            to={`/driver-management/edit-driver/${item._id}`} 
                                             className='py-3 font-medium hover:bg-gray-100 px-4 cursor-pointer flex items-center gap-1'>
                                                 <span>Edit Driver</span>
                                             </Link>
-                                            <div className='py-3 font-medium hover:bg-gray-100 px-4 cursor-pointer flex items-center gap-1'>
-                                                <span>Block Driver</span>
-                                            </div>
-                                            <div className='py-3 font-medium hover:bg-gray-100 px-4 cursor-pointer'>
-                                                Block Driver
-                                            </div>
+                                            <button className='py-3 font-medium hover:bg-gray-100 px-4 cursor-pointer flex items-center gap-1'
+                                            onClick={() => deleteHandler(item?._id)}
+                                            disabled={deleteLoading}
+                                            >
+                                                <span>
+                                                    {
+                                                        deleteLoading
+                                                        ? 
+                                                            <ClipLoader size={15} />
+                                                        : 
+                                                            'Delete Driver'
+                                                    }
+                                                </span>
+                                            </button>
                                         </div>
                                     }
                                 </div>
@@ -143,9 +114,9 @@ const DriversTable = () => {
             </table>
             {
                 <Pagination 
-                currentPage={1}
-                pageCount={5}
-                setPage={1}
+                currentPage={currentPage}
+                pageCount={pages}
+                setPage={setCurrentPage}
                 />
             }
         </div>

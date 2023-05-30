@@ -1,21 +1,19 @@
 import Axios from 'config/api';
-import { setLoading, setDocs , setUpdateLoading , setDocDetails , removeDoc , updateDoc , setCurrentPage , setPages , setDocsCount , addDoc, setCreateLoading, setDeleteLoading } from 'redux/reducers/bannerReducer';
+import { setLoading, setDocs , setUpdateLoading , setDocDetails , removeDoc , updateDoc , setCurrentPage , setPages , setDocsCount , addDoc, setCreateLoading, setDeleteLoading } from 'redux/reducers/driverReducer';
 import { toast } from 'react-toastify';
 import toastError from 'utils/toastError';
 
-const url = '/banner'
-
-export const createBanner = (data , navigate) => async (dispatch , getState) => {
+export const createDriver = (data , navigate) => async (dispatch , getState) => {
     dispatch(setCreateLoading(true))
     try {
-        const { data : { data : { doc , message } } } = await Axios.post(`${url}` , data , {
+        const { data : { data : { doc , message } } } = await Axios.post(`/driver/register` , data , {
             headers : {
                 Authorization : `Bearer ${getState().auth.user.token}`
             }
         } );
         dispatch(addDoc(doc));
         toast.success(message);
-        navigate('/banners')
+        navigate('/driver-management/drivers')
         dispatch(setCreateLoading(false));
     } catch (err) {
         dispatch(setCreateLoading(false));
@@ -24,10 +22,10 @@ export const createBanner = (data , navigate) => async (dispatch , getState) => 
     }
 }
 
-export const getAllBanners = (keyword = '') => async (dispatch , getState) => {
+export const getAllDrivers = (keyword) => async (dispatch , getState) => {
     dispatch(setLoading(true))
     try {
-        const { data : { data : { docs , page , pages , docCount } } } = await Axios(`${url}?keyword=${keyword}` , {
+        const { data : { data : { docs , page , pages , docCount } } } = await Axios(`/driver/all?keyword=${keyword}` , {
             headers : {
                 Authorization : `Bearer ${getState().auth.user.token}`
             }
@@ -45,10 +43,10 @@ export const getAllBanners = (keyword = '') => async (dispatch , getState) => {
 }
 
 
-export const getBannerDetails = (itemId) => async (dispatch , getState) => {
+export const getDriverDetails = (itemId) => async (dispatch , getState) => {
     dispatch(setLoading(true))
     try {
-        const { data : { data : { doc } } } = await Axios(`${url}/${itemId}` , {
+        const { data : { data : { doc } } } = await Axios(`/driver/details/${itemId}` , {
             headers : {
                 Authorization : `Bearer ${getState().auth.user.token}`
             }
@@ -62,10 +60,10 @@ export const getBannerDetails = (itemId) => async (dispatch , getState) => {
     }
 }
 
-export const editBanner = (itemId , updateData ) => async (dispatch , getState) => {
+export const editDriver = (itemId , updateData ) => async (dispatch , getState) => {
     dispatch(setUpdateLoading(true))
     try {
-        const { data : { data : { doc , message } } } = await Axios.put(`${url}/${itemId}` , updateData , {
+        const { data : { data : { doc , message } } } = await Axios.put(`/driver/edit/${itemId}` , updateData , {
             headers : {
                 Authorization : `Bearer ${getState().auth.user.token}`
             }
@@ -80,10 +78,10 @@ export const editBanner = (itemId , updateData ) => async (dispatch , getState) 
     }
 }
 
-export const deleteBanner = (itemId) => async (dispatch , getState) => {
+export const deleteDriver = (itemId) => async (dispatch , getState) => {
     dispatch(setDeleteLoading(true))
     try {
-        const { data : { data : { message } } } = await Axios.delete(`${url}/${itemId}` , {
+        const { data : { data : { message } } } = await Axios.delete(`/driver/delete/${itemId}` , {
             headers : {
                 Authorization : `Bearer ${getState().auth.user.token}`
             }

@@ -102,7 +102,7 @@ export const deleteCategory = (id) => async (dispatch , getState) => {
 export const getTotalCategories = () => async (dispatch) => {
     try {
         dispatch(setLoading(true));
-        const { data : { data : { docs } } } = await Axios(`/category/all`);
+        const { data : { data : { docs } } } = await Axios(`/category/total`);
         dispatch(setCategories(docs));
         dispatch(setLoading(false));
     } catch (err) {

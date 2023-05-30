@@ -7,7 +7,7 @@ const Search = ({ fetcher , timeout = 500 , setSearch }) => {
         const value = event.target.value;
         setSearch(value);
         fetcher(value);
-    }, timeout );
+    } , timeout );
 
 
     return (
