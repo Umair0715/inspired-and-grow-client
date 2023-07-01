@@ -1,78 +1,82 @@
-import Axios from "config/api";
-import { 
-    setOrderDetails , setOrders , setLoading, setPages, setCurrentPage, setUpdateLoading , updateOrder, setDocsCount
-} from "redux/reducers/orderReducer";
+import Axios from 'config/api';
+import { setLoading, setDocs , setUpdateLoading , setDocDetails , removeDoc , updateDoc , setCurrentPage , setPages , setDocsCount , addDoc, setCreateLoading, setDeleteLoading } from 'redux/reducers/orderReducer';
+import { toast } from 'react-toastify';
+import toastError from 'utils/toastError';
 
-const endPoint = '/orders'
+const url = '/order'
 
-export const getOrders = (toast) => async (dispatch , getState) => {
+
+export const getAllOrders = (status) => async (dispatch , getState) => {
+    dispatch(setLoading(true))
     try {
-        dispatch(setLoading(true));
-        const { token } = getState().auth.user;
-        const { currentPage , orderStatus } = getState().order;
-        const { data : { data : { docs , pages , page , docCount } } } = await Axios(`${endPoint}?page=${currentPage}&orderStatus=${orderStatus}` , {
+        const currentPage = getState().order.currentPage;
+        const { data : { data : { docs , page , pages , docCount } } } = await Axios(`${url}?status=${status}&page=${currentPage}` , {
             headers : {
-                Authorization : `Bearer ${token}`
+                Authorization : `Bearer ${getState().auth.user.token}`
             }
-        });
-        dispatch(setOrders(docs));
-        dispatch(setPages(pages));
+        } );
+        dispatch(setDocs(docs));
         dispatch(setCurrentPage(page));
+        dispatch(setPages(pages));
         dispatch(setDocsCount(docCount));
         dispatch(setLoading(false));
     } catch (err) {
         dispatch(setLoading(false));
-        console.log('Get Orders error:' , err);
-        toast.error(err?.response?.data?.message || err?.message || 'Something went wrong.');
+        console.log('error' , err);
+        toastError(err)
     }
 }
 
 
-export const getOrderDetails = (id , toast) => async (dispatch , getState) => {
+export const getOrderDetails = (itemId) => async (dispatch , getState) => {
+    dispatch(setLoading(true))
     try {
-        dispatch(setLoading(true));
-        const { data : { data : { doc } } } = await Axios(`${endPoint}/${id}`);
-        dispatch(setOrderDetails(doc));
+        const { data : { data : { doc } } } = await Axios(`${url}/${itemId}` , {
+            headers : {
+                Authorization : `Bearer ${getState().auth.user.token}`
+            }
+        } );
+        dispatch(setDocDetails(doc));
         dispatch(setLoading(false));
     } catch (err) {
         dispatch(setLoading(false));
-        console.log('Get Order Details error:' , err);
-        toast.error(err?.response?.data?.message || err?.message || 'Something went wrong.');
+        console.log('error' , err);
+        toastError(err)
     }
 }
 
-export const getSingleUserOrders = (id , toast) => async (dispatch , getState) => {
+export const updateOrder = (itemId , updateData ) => async (dispatch , getState) => {
+    dispatch(setUpdateLoading(true))
     try {
-        dispatch(setLoading(true));
-        const { currentPage } = getState().order;
-        const { data : { data : { docs , pages , page  } } } = await Axios(`${endPoint}/user/${id}?page=${currentPage}` , {
+        const { data : { data : { doc , message } } } = await Axios.put(`${url}/${itemId}` , updateData , {
             headers : {
                 Authorization : `Bearer ${getState().auth.user.token}`
             }
         });
-        dispatch(setOrders(docs));
-        dispatch(setPages(pages));
-        dispatch(setCurrentPage(page));
-        dispatch(setLoading(false));
+        toast.success(message)
+        dispatch(updateDoc(doc));
+        dispatch(setUpdateLoading(false));
     } catch (err) {
-        dispatch(setLoading(false));
-        console.log('Get User Orders error:' , err);
-        toast.error(err?.response?.data?.message || err?.message || 'Something went wrong.');
+        dispatch(setUpdateLoading(false));
+        console.log('error' , err);
+        toastError(err)
     }
 }
 
-export const _updateOrder = (id , data , toast) => async (dispatch , getState) => {
+export const deleteOrder = (itemId) => async (dispatch , getState) => {
+    dispatch(setDeleteLoading(true))
     try {
-        dispatch(setUpdateLoading(true));
-        const { token } = getState().auth.user;
-        const { data : { data : { doc } } } = await Axios.put(`${endPoint}/${id}` , data  , 
-        { headers : { Authorization : `Bearer ${token}`} });
-        dispatch(setOrderDetails(doc));
-        dispatch(setUpdateLoading(false));
-        toast.success('Updated Successfully.');
+        const { data : { data : { message } } } = await Axios.delete(`${url}/${itemId}` , {
+            headers : {
+                Authorization : `Bearer ${getState().auth.user.token}`
+            }
+        } );
+        toast.success(message)
+        dispatch(removeDoc(itemId));
+        dispatch(setDeleteLoading(false));
     } catch (err) {
-        dispatch(setUpdateLoading(false));
-        console.log('Update Order error' , err);
-        toast.error(err?.response?.data?.message || err?.message || 'Something went wrong.');
+        dispatch(setDeleteLoading(false));
+        console.log('error' , err);
+        toastError(err)
     }
 }

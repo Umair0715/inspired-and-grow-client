@@ -14,7 +14,7 @@ const Users = () => {
     const [range , setRange] = useState('');
     const [search , setSearch] = useState('');
 
-    const { currentPage , loading , users } = useSelector(state => state.user);
+    const { currentPage , loading , users , docsCount } = useSelector(state => state.user);
 
     useEffect(() => {
         dispatch(getAllUsers(range , search))
@@ -27,8 +27,11 @@ const Users = () => {
 
     return (
         <Layout>
-            <div>
+            <div className='flex items-center gap-2'>
                 <Heading title='User Management' showIcon={false} />
+                <div className='bg-gray-100 flex items-center justify-center py-1 rounded-md px-3'>
+                    {docsCount || 0}
+                </div>
             </div>
             <div className='flex items-center justify-between mt-6'>
                 <div>
@@ -41,16 +44,34 @@ const Users = () => {
                 </div>
             </div>
             <div className='my-6'>
+                
                 {
                     loading 
                     ?
                         <Loader />
                     :
-                    users?.length > 0 
-                    ? 
-                        <UsersTable setRange={setRange} />
-                    : 
-                        <ItemNotFound />
+                        <div className='shadow-bg overflow-x-auto rounded-lg'>
+                            <div className='py-4 flex items-end justify-end px-4'>
+                                <select 
+                                className='select-box'
+                                onChange={e => setRange(e.target.value)}
+                                value={range}
+                                >
+                                    <option value="all">All</option>
+                                    <option value="today">Today</option>
+                                    <option value="week">Week</option>
+                                    <option value="month">Month</option>
+                                </select>
+                            </div>
+                            {
+                                users?.length > 0 
+                                ? 
+                                    <UsersTable setRange={setRange} />
+                                : 
+                                    <ItemNotFound />
+                            }
+                        </div>
+                    
                 }
             </div>
         </Layout>

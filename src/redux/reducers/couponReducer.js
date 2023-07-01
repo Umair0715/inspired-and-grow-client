@@ -1,10 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const orderSlice = createSlice({
-    name : 'order' ,
+const couponSlice = createSlice({
+    name : 'coupon' ,
     initialState : {
-        orders : [] ,
-        orderDetails : null ,
+        coupons : [] ,
+        couponDetails : null ,
         loading : false , 
         createLoading : false , 
         updateLoading : false , 
@@ -15,21 +15,21 @@ const orderSlice = createSlice({
     } , 
     reducers : {
         setDocs (state , action) {
-            state.orders = action.payload
+            state.coupons = action.payload
         } ,
         setDocDetails (state , action) {
-            state.orderDetails = action.payload
+            state.couponDetails = action.payload
         } ,
         addDoc (state , action) {
-            state.orders = state.orders.unshift(action.payload);
+            state.coupons = state.coupons.unshift(action.payload);
         } ,
         updateDoc (state , action) {
-            const index = state.orders.findIndex(i => i._id === action.payload._id);
-            state.orders[index] = action.payload;
-            state.orderDetails = action.payload;
+            const index = state.coupons.findIndex(i => i._id === action.payload._id);
+            state.coupons[index] = action.payload;
+            state.couponDetails = action.payload;
         } ,
         removeDoc (state , action) {
-            state.orders = state.orders.filter(i => i._id !== action.payload);
+            state.coupons = state.coupons.filter(i => i._id !== action.payload);
         } , 
         setLoading (state , action) {
             state.loading = action.payload;
@@ -57,6 +57,6 @@ const orderSlice = createSlice({
 
 export const { 
     setDocs , setDocDetails , setLoading , setCreateLoading , setUpdateLoading , setDeleteLoading , setCurrentPage , setPages , updateDoc , removeDoc , setDocsCount , addDoc 
-} = orderSlice.actions;
+} = couponSlice.actions;
 
-export default orderSlice.reducer;
+export default couponSlice.reducer;

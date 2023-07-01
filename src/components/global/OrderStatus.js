@@ -22,7 +22,7 @@ const OrderStatus = ({ status }) => {
                     ? 
                         'bg-purple-100 text-purple-500'
                     : 
-                    status === 'out for delivery'
+                    status === 'processing'
                     ? 
                         'bg-blue-100 text-blue-500'
                     : 
@@ -56,7 +56,7 @@ const OrderStatus = ({ status }) => {
                     ? 
                         'bg-purple-500'
                     : 
-                    status === 'out for delivery'
+                    status === 'processing'
                     ? 
                         'bg-blue-500'
                     : 

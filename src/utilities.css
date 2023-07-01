@@ -35,10 +35,10 @@
 }
 
 .accept , .cancel {
-    @apply bg-red-500 w-[20px] h-[20px] rounded-full flex items-center justify-center text-white text-base cursor-pointer disabled:cursor-not-allowed;
+    @apply bg-green-500 w-[20px] h-[20px] rounded-full flex items-center justify-center text-white text-base cursor-pointer disabled:cursor-not-allowed;
 }
 .cancel {
-    @apply bg-green-500 hover:bg-green-600;
+    @apply bg-red-500 hover:bg-red-600;
 }
 
 @media (max-width: 700px){

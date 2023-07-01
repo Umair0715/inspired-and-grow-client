@@ -30,6 +30,8 @@ import Login from "pages/auth/Login";
 import AddCategory from "pages/categoryManagement/AddCategory";
 import EditCategory from "pages/categoryManagement/EditCategory";
 import EditSubCategory from "pages/categoryManagement/EditSubCategory";
+import EditCoupon from "pages/coupons/EditCoupon";
+import OrderDetails from "components/orderManagement/OrderDetails";
 
 
 function App() {
@@ -68,6 +70,10 @@ function App() {
                     <Route 
                     path='/order-management/orders'
                     element={<Orders />}
+                    />
+                    <Route 
+                    path='/order-management/order-details/:id'
+                    element={<OrderDetails />}
                     />
                     <Route 
                     path='/order-management/pre-bookings'
@@ -152,6 +158,10 @@ function App() {
                     <Route 
                     path="/coupons/add-new"
                     element={<AddCoupon />}
+                    />
+                    <Route 
+                    path="/coupons/edit/:id"
+                    element={<EditCoupon />}
                     />
                 </Routes>
             </Router>

@@ -6,6 +6,8 @@ import subCategoryReducer from "./reducers/subCategoryReducer";
 import productReducer from "./reducers/productReducer";
 import driverReducer from "./reducers/driverReducer";
 import bannerReducer from "./reducers/bannerReducer";
+import couponReducer from "./reducers/couponReducer";
+import orderReducer from "./reducers/orderReducer";
 
 const store = configureStore({
     reducer: {
@@ -15,7 +17,9 @@ const store = configureStore({
         subCategory : subCategoryReducer ,
         inventory : productReducer ,
         driver : driverReducer ,
-        banner : bannerReducer
+        banner : bannerReducer ,
+        coupon : couponReducer ,
+        order : orderReducer
     },
 });
 

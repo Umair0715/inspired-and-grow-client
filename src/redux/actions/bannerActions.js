@@ -27,7 +27,8 @@ export const createBanner = (data , navigate) => async (dispatch , getState) => 
 export const getAllBanners = (keyword = '') => async (dispatch , getState) => {
     dispatch(setLoading(true))
     try {
-        const { data : { data : { docs , page , pages , docCount } } } = await Axios(`${url}?keyword=${keyword}` , {
+        const currentPage = getState().banner.currentPage
+        const { data : { data : { docs , page , pages , docCount } } } = await Axios(`${url}?keyword=${keyword}&page=${currentPage}` , {
             headers : {
                 Authorization : `Bearer ${getState().auth.user.token}`
             }

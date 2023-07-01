@@ -25,7 +25,8 @@ export const createUser = (userData , navigate) => async (dispatch , getState) =
 export const getAllUsers = (range = '' , keyword = '') => async (dispatch , getState) => {
     dispatch(setLoading(true))
     try {
-        const { data : { data : { docs , page , pages , docCount } } } = await Axios(`/user/all?range=${range}&keyword=${keyword}` , {
+        const currentPage = getState().user.currentPage;
+        const { data : { data : { docs , page , pages , docCount } } } = await Axios(`/user/all?range=${range}&keyword=${keyword}&page=${currentPage}` , {
             headers : {
                 Authorization : `Bearer ${getState().auth.user.token}`
             }

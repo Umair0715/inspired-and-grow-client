@@ -46,17 +46,8 @@ const UsersTable = ({ setRange }) => {
     }
 
     return (
-        <div className=" shadow-bg overflow-x-auto rounded-lg">
-            <div className='py-4 flex items-end justify-end px-4'>
-                <select className='select-box'
-                onChange={e => setRange(e.target.value)}
-                >
-                    <option value="all">All</option>
-                    <option value="today">Today</option>
-                    <option value="week">Week</option>
-                    <option value="month">Month</option>
-                </select>
-            </div>
+        <div className="">
+            
             <table className="w-full table-auto overflow-x-auto ">
                 <thead className="bg-lightSlate border-b text-sm">
                     <tr className='bg-secondary text-white'>
